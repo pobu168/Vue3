@@ -1,0 +1,27 @@
+
+<html>
+  <head>
+    <style type="text/css">
+ 
+    </style>
+  </head>
+ 
+  <body>
+    <div id="app">
+      <div>hello</div>
+    </div>
+    <script src="../dist/vue.global.js"></script>
+    <script>
+      const {createApp, reactive, onBeforeMount, onBeforeUpdate, onUpdated, onMounted, onRenderTracked, onRenderTriggered} = Vue
+ 
+      const app = createApp({
+        setup(){        
+          // const state = reactive({
+          //   msg: 'Vue3.0'
+          // })          
+          // return {state}
+        }
+      }).mount('#app')
+    </script>
+  </body>
+</html>
