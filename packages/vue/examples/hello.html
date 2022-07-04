@@ -7,19 +7,20 @@
   </head>
  
   <body>
-    <div id="app">
-      <div>hello</div>
+    <div id="app" class="test-class">
+      <div class="child" style="color:red">hello {{state.msg}}</div>
     </div>
     <script src="../dist/vue.global.js"></script>
     <script>
       const {createApp, reactive, onBeforeMount, onBeforeUpdate, onUpdated, onMounted, onRenderTracked, onRenderTriggered} = Vue
  
       const app = createApp({
+        aa:1,
         setup(){        
-          // const state = reactive({
-          //   msg: 'Vue3.0'
-          // })          
-          // return {state}
+          const state = reactive({
+            msg: 'Vue3.0'
+          })          
+          return {state}
         }
       }).mount('#app')
     </script>

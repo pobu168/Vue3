@@ -438,7 +438,8 @@ function createBaseVNode(
     dynamicChildren: null,
     appContext: null
   } as VNode
-
+  console.log('标准化子节点')
+  debugger
   if (needFullChildrenNormalization) {
     normalizeChildren(vnode, children)
     // normalize suspense children
@@ -535,6 +536,8 @@ function _createVNode(
     type = convertLegacyComponent(type, currentRenderingInstance)
   }
 
+  console.log('标准化props')
+  debugger
   // class & style normalization.
   if (props) {
     // for reactive or proxy objects, we need to clone it to enable mutation.
@@ -553,6 +556,8 @@ function _createVNode(
     }
   }
 
+  console.log('vnode类型编码')
+  debugger
   // encode the vnode type information into a bitmap
   const shapeFlag = isString(type)
     ? ShapeFlags.ELEMENT
@@ -578,6 +583,8 @@ function _createVNode(
     )
   }
 
+  console.log('创建vnode对象')
+  debugger
   return createBaseVNode(
     type,
     props,
