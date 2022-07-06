@@ -293,6 +293,7 @@ export function createRenderer<
   HostNode = RendererNode,
   HostElement = RendererElement
 >(options: RendererOptions<HostNode, HostElement>) {
+  debugger
   return baseCreateRenderer<HostNode, HostElement>(options)
 }
 
@@ -368,6 +369,8 @@ function baseCreateRenderer(
 
     // patching & not same type, unmount old tree
     if (n1 && !isSameVNodeType(n1, n2)) {
+      console.log('n1、n2都存在,且类型不同,置空你')
+      debugger
       anchor = getNextHostNode(n1)
       unmount(n1, parentComponent, parentSuspense, true)
       n1 = null
@@ -381,6 +384,8 @@ function baseCreateRenderer(
     const { type, ref, shapeFlag } = n2
     switch (type) {
       case Text:
+        console.log('处理文本')
+        debugger
         processText(n1, n2, container, anchor)
         break
       case Comment:
@@ -408,6 +413,8 @@ function baseCreateRenderer(
         break
       default:
         if (shapeFlag & ShapeFlags.ELEMENT) {
+          console.log('处理普通元素')
+          debugger
           processElement(
             n1,
             n2,
@@ -420,6 +427,8 @@ function baseCreateRenderer(
             optimized
           )
         } else if (shapeFlag & ShapeFlags.COMPONENT) {
+          console.log('处理组件型逻辑')
+          debugger
           processComponent(
             n1,
             n2,
@@ -583,6 +592,8 @@ function baseCreateRenderer(
   ) => {
     isSVG = isSVG || (n2.type as string) === 'svg'
     if (n1 == null) {
+      console.log('挂载元素')
+      debugger
       mountElement(
         n2,
         container,
@@ -594,6 +605,8 @@ function baseCreateRenderer(
         optimized
       )
     } else {
+      console.log('更新元素')
+      debugger
       patchElement(
         n1,
         n2,
@@ -629,8 +642,11 @@ function baseCreateRenderer(
       // Only static vnodes can be reused, so its mounted DOM nodes should be
       // exactly the same, and we can simply do a clone here.
       // only do this in production since cloned trees cannot be HMR updated.
+      
       el = vnode.el = hostCloneNode(vnode.el)
     } else {
+      console.log('创建 DOM 元素节点')
+      debugger
       el = vnode.el = hostCreateElement(
         vnode.type as string,
         isSVG,
@@ -641,8 +657,12 @@ function baseCreateRenderer(
       // mount children first, since some props may rely on child content
       // being already rendered, e.g. `<select value>`
       if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
+        console.log('处理子节点是纯文本情况')
+        debugger
         hostSetElementText(el, vnode.children as string)
       } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+        console.log('处理子节点是数组的情况')
+        debugger
         mountChildren(
           vnode.children as VNodeArrayChildren,
           el,
@@ -658,6 +678,8 @@ function baseCreateRenderer(
       if (dirs) {
         invokeDirectiveHook(vnode, null, parentComponent, 'created')
       }
+      console.log('处理 props')
+      debugger
       // props
       if (props) {
         for (const key in props) {
@@ -716,6 +738,8 @@ function baseCreateRenderer(
     if (needCallTransitionHooks) {
       transition!.beforeEnter(el)
     }
+    console.log('把创建的 DOM 元素节点挂载到 container上')
+    debugger
     hostInsert(el, container, anchor)
     if (
       (vnodeHook = props && props.onVnodeMounted) ||
@@ -1172,6 +1196,8 @@ function baseCreateRenderer(
           optimized
         )
       } else {
+        console.log('n1为null,挂载组件')
+        debugger
         mountComponent(
           n2,
           container,
@@ -1183,6 +1209,8 @@ function baseCreateRenderer(
         )
       }
     } else {
+      console.log('n1不为空,更新组件')
+      debugger
       updateComponent(n1, n2, optimized)
     }
   }
@@ -1200,6 +1228,8 @@ function baseCreateRenderer(
     // mounting
     const compatMountInstance =
       __COMPAT__ && initialVNode.isCompatRoot && initialVNode.component
+    console.log('创建组件实例，通过对象的方式去创建了当前渲染的组件实例')
+    debugger
     const instance: ComponentInternalInstance =
       compatMountInstance ||
       (initialVNode.component = createComponentInstance(
@@ -1227,6 +1257,8 @@ function baseCreateRenderer(
       if (__DEV__) {
         startMeasure(instance, `init`)
       }
+      console.log('设置组件实例,instance 保留了很多组件相关的数据，维护了组件的上下文，包括对 props、插槽、以及其他实例的属性的初始化处理')
+      debugger
       setupComponent(instance)
       if (__DEV__) {
         endMeasure(instance, `init`)
@@ -1246,7 +1278,8 @@ function baseCreateRenderer(
       }
       return
     }
-
+    console.log('设置并运行带副作用的渲染函数')
+    debugger
     setupRenderEffect(
       instance,
       initialVNode,
@@ -1373,6 +1406,8 @@ function baseCreateRenderer(
           if (__DEV__) {
             startMeasure(instance, `render`)
           }
+          console.log('渲染生成子树vnode')
+          debugger
           const subTree = (instance.subTree = renderComponentRoot(instance))
           if (__DEV__) {
             endMeasure(instance, `render`)
@@ -1380,6 +1415,8 @@ function baseCreateRenderer(
           if (__DEV__) {
             startMeasure(instance, `patch`)
           }
+          console.log('把子树 vnode 挂载到 container 中')
+          debugger
           patch(
             null,
             subTree,
@@ -1392,6 +1429,7 @@ function baseCreateRenderer(
           if (__DEV__) {
             endMeasure(instance, `patch`)
           }
+          console.log('保留渲染生成的子树根 DOM 节点')
           initialVNode.el = subTree.el
         }
         // mounted hook
@@ -1448,6 +1486,8 @@ function baseCreateRenderer(
         // #2458: deference mount-only object parameters to prevent memleaks
         initialVNode = container = anchor = null as any
       } else {
+        console.log('更新组件')
+        debugger
         // updateComponent
         // This is triggered by mutation of component's own state (next: null)
         // OR parent calling processComponent (next: VNode)
@@ -1548,14 +1588,14 @@ function baseCreateRenderer(
         }
       }
     }
-
+    console.log('创建响应式的副作用渲染函数')
+    debugger
     // create reactive effect for rendering
     const effect = (instance.effect = new ReactiveEffect(
       componentUpdateFn,
       () => queueJob(update),
       instance.scope // track it in component's effect scope
     ))
-
     const update: SchedulerJob = (instance.update = () => effect.run())
     update.id = instance.uid
     // allowRecurse
@@ -2325,10 +2365,14 @@ function baseCreateRenderer(
 
   const render: RootRenderFunction = (vnode, container, isSVG) => {
     if (vnode == null) {
+      console.log('vnode为空执行umount逻辑')
+      debugger
       if (container._vnode) {
         unmount(container._vnode, null, null, true)
       }
     } else {
+      console.log('vnode不为空执行patch更新逻辑')
+      debugger
       patch(container._vnode || null, vnode, container, null, null, null, isSVG)
     }
     flushPostFlushCbs()
@@ -2355,7 +2399,7 @@ function baseCreateRenderer(
       internals as RendererInternals<Node, Element>
     )
   }
-
+  console.log('baseCreateRenderer: 返回渲染函数render与渲染器createApp')
   return {
     render,
     hydrate,

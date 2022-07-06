@@ -178,7 +178,9 @@ export function createAppAPI<HostElement>(
   render: RootRenderFunction,
   hydrate?: RootHydrateFunction
 ): CreateAppFunction<HostElement> {
+  console.log('createAppAPI: 生成渲染器')
   return function createApp(rootComponent, rootProps = null) {
+    debugger
     if (!isFunction(rootComponent)) {
       rootComponent = { ...rootComponent }
     }
@@ -292,6 +294,8 @@ export function createAppAPI<HostElement>(
                 ` you need to unmount the previous app by calling \`app.unmount()\` first.`
             )
           }
+          console.log('创建vnode')
+          debugger
           const vnode = createVNode(
             rootComponent as ConcreteComponent,
             rootProps
@@ -310,6 +314,8 @@ export function createAppAPI<HostElement>(
           if (isHydrate && hydrate) {
             hydrate(vnode as VNode<Node, Element>, rootContainer as any)
           } else {
+            console.log('渲染vnode')
+            debugger
             render(vnode, rootContainer, isSVG)
           }
           isMounted = true

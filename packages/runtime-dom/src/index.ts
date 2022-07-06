@@ -40,6 +40,8 @@ let renderer: Renderer<Element | ShadowRoot> | HydrationRenderer
 let enabledHydration = false
 
 function ensureRenderer() {
+  console.log('1-1 [延时创建渲染器，当用户只依赖响应式包的时候，可以通过 tree-shaking 移除核心渲染逻辑相关的代码]')
+  debugger
   return (
     renderer ||
     (renderer = createRenderer<Node, Element | ShadowRoot>(rendererOptions))
@@ -64,7 +66,7 @@ export const hydrate = ((...args) => {
 }) as RootHydrateFunction
 
 export const createApp = ((...args) => {
-  console.log('test')
+  console.log('1 [创建 app 对象]')
   debugger
   const app = ensureRenderer().createApp(...args)
 
@@ -75,9 +77,13 @@ export const createApp = ((...args) => {
 
   const { mount } = app
   app.mount = (containerOrSelector: Element | ShadowRoot | string): any => {
+    console.log('标准化容器')
+    debugger
     const container = normalizeContainer(containerOrSelector)
     if (!container) return
 
+    console.log('设置模板内容')
+    debugger
     const component = app._component
     if (!isFunction(component) && !component.render && !component.template) {
       // __UNSAFE__
@@ -102,6 +108,8 @@ export const createApp = ((...args) => {
 
     // clear content before mounting
     container.innerHTML = ''
+    console.log('挂载')
+    debugger
     const proxy = mount(container, false, container instanceof SVGElement)
     if (container instanceof Element) {
       container.removeAttribute('v-cloak')
